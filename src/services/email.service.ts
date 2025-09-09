@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { AppError } from "../utils/AppError";
 
 const resendApiKey = process.env.RESEND_API_KEY;
 if (!resendApiKey) {
@@ -26,12 +27,29 @@ export async function sendFormSubmissionEmail(
 
   const html = buildHtml(site, data);
 
-  await resend.emails.send({
-    from: `${recipientEmail}`,
-    to: [recipientEmail],
-    subject: subject || `New ${site} form submission`,
-    html,
-  });
+  if (!resendApiKey) {
+    throw new AppError(500, 'email_config_missing', 'RESEND_API_KEY is not configured');
+  }
+
+  try {
+    const result = await resend.emails.send({
+      from: `${recipientEmail}`,
+      to: [recipientEmail],
+      subject: subject || `New ${site} form submission`,
+      html,
+    });
+    if ((result as any)?.error) {
+      const rerr = (result as any).error;
+      // eslint-disable-next-line no-console
+      console.error('Resend reported error:', rerr);
+      throw new AppError(502, 'email_provider_error', 'Failed to send email via Resend', rerr);
+    }
+    // eslint-disable-next-line no-console
+    console.log('Resend send result:', result);
+  } catch (err) {
+    if (err instanceof AppError) throw err;
+    throw new AppError(502, 'email_send_failed', 'Email sending failed', err);
+  }
 }
 
 function buildHtml(site: FormEmailPayload['site'], data: Record<string, unknown>): string {

@@ -32,9 +32,8 @@ export async function sendFormSubmissionEmail(
   }
 
   try {
-    const fromAddress = process.env.MAIL_FROM || 'onboarding@resend.dev';
     const result = await resend.emails.send({
-      from: fromAddress,
+      from: `${recipientEmail}`,
       to: [recipientEmail],
       subject: subject || `New ${site} form submission`,
       html,

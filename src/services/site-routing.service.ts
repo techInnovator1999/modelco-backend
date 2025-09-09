@@ -1,8 +1,12 @@
 const SITE_TO_EMAIL: Record<string, string> = {
-  'rentready-labor-solutions': 'rohit@rentreadyls.com',
+  'rentready-labor-solutions': 'rohit@stackgs.com',
   'stackgrowth': 'rohit@stackgs.com',
-  'scarletoakcapital': 'rohitk@scarletoakcapital.com',
-  'prism-fs': 'rohit@prism-fs.com',
+  'scarletoakcapital': 'rohit@stackgs.com',
+  'prism-fs': 'rohit@stackgs.com',
+  // 'rentready-labor-solutions': 'rohit@rentreadyls.com',
+  // 'stackgrowth': 'rohit@stackgs.com',
+  // 'scarletoakcapital': 'rohitk@scarletoakcapital.com',
+  // 'prism-fs': 'rohit@prism-fs.com',
 };
 
 export type SiteKey = keyof typeof SITE_TO_EMAIL;
